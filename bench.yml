@@ -1,0 +1,30 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bench
+spec:
+  containers:
+  - name: bench
+    image: johnstrunk/osio-bench:latest
+    imagePullPolicy: Always
+    volumeMounts:
+    - name: data
+      mountPath: /target
+  restartPolicy: Never
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: claim
